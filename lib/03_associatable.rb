@@ -50,6 +50,7 @@ module Associatable
   # Phase IIIb
   def belongs_to(name, options = {})
     options = BelongsToOptions.new(name, options)
+    assoc_options[name] = options
 
     define_method(options.class_name.underscore) do
       model = options.model_class
@@ -67,8 +68,9 @@ module Associatable
     end
   end
 
+
   def assoc_options
-    # Wait to implement this in Phase IVa. Modify `belongs_to`, too.
+    @options ||= {}
   end
 end
 
