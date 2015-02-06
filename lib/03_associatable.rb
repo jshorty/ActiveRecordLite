@@ -68,7 +68,6 @@ module Associatable
     end
   end
 
-
   def assoc_options
     @options ||= {}
   end
