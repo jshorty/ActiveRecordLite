@@ -5,7 +5,12 @@ require 'active_support/inflector'
 
 class SQLObject
   def self.columns
-    cols = DBConnection.execute2("SELECT * FROM #{self.table_name}")
+    cols = DBConnection.execute2(<<-SQL)
+             SELECT
+               *
+             FROM
+               #{self.table_name}
+           SQL
     cols.first.map(&:to_sym)
   end
 
@@ -31,11 +36,23 @@ class SQLObject
   end
 
   def self.all
-    # ...
+    attrs = DBConnection.execute(<<-SQL)
+              SELECT
+                #{table_name}.*
+              FROM
+                #{table_name}
+            SQL
+    parse_all(attrs)
   end
 
   def self.parse_all(results)
-    # ...
+    instances = []
+
+    results.each do |attrs|
+      instances << self.new(attrs)
+    end
+
+    instances
   end
 
   def self.find(id)
